@@ -45,6 +45,7 @@ class Post(models.Model):
         ordering = ('-post_date',)
     def __unicode__(self):
         return self.title
+
     @models.permalink
     def get_absolute_url(self):
         kwargs = {'slug': self.slug,}

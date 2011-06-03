@@ -1,1 +1,5 @@
 {% extends "news/base.html" %}
+
+{% block rss %}
+<link rel="alternate" type="application/rss+xml" title="Latest Blog Posts RSS Feed" href="/feeds/blog/" />
+{% endblock %}
