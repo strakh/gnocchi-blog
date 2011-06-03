@@ -1,0 +1,34 @@
+{% extends "blog/base.html" %}
+
+{% block contents %}
+{% include 'blog/post_brief.html' %}
+
+<div class="post">
+  <a name="comments"></a>
+  <div id="comments">
+  {% if post.allow_comments %}
+    {% if post.public_comments %}
+          <ul class="comments"><li>
+      {% for comment in post.public_comments %}
+        {% include 'blog/comment_brief.html' %}
+      {% endfor %}
+    {% else %}
+      <div class="nocomment">There are no comments on this story, yet.</div>
+    {% endif %}
+  {% else %}
+      <div class="nocomment">Comments disabled for this post.</div>
+  {% endif %}
+  </div>
+  {% if post.allow_comments %}
+  <div class="commentform">
+	<form action="." method="post" id="" class="new-comment">
+	  <div>
+		{{ comment_form.as_p }}
+		<input type="submit" name="comment" value="comment" />
+	  </div>
+	</form>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% load markup %}
+<div class="story">
+    {% if comment.user %}
+		<a href="{% url user_main comment.name %}" class="title">{{ comment.name }}</a>
+		{% else %}
+		{{ comment.name }}
+		{% endif %}
+    <span class="details postinfo">
+		 on {{comment.post_date}}
+	  </span>
+    {{comment.content|textile}}
+</div>		
