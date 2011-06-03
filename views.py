@@ -93,4 +93,4 @@ def post_tagged(request, tag):
     date_field = 'post_date'
     queryset = models.Post.objects.current().filter(tags__name=tag)
     tags = Tag.objects.all()
-    return archive_index(request, queryset, date_field, extra_context=dict(page='blog', tags=tags))
+    return archive_index(request, queryset, date_field, extra_context=dict(page='blog', tags=tags, tag=tag))

@@ -34,9 +34,15 @@ class LatestBlogFeed(Feed):
 
 
 class BlogTagFeed(LatestBlogFeed):
-    def get_object(self, request, tags):
-        tags = [ tag.strip() for tag in tags.split('/') ]
+    def get_object(self, tags):
+        tags = [ tag.strip() for tag in tags ]
         return tags
+
+    def items(self, obj):
+        posts = Post.objects.current()
+        for tag in obj:
+          posts = posts.filter(tags__name=tag)
+        return posts
 
     def description(self, obj):
         return "Posts with tags %s" % (', '.join(obj))

@@ -1,5 +1,9 @@
 {% extends "news/base.html" %}
 
 {% block rss %}
+{% if tag %}
+<link rel="alternate" type="application/rss+xml" title="Blog Posts For Tag: {{ tag }}" href="/feeds/blogtag/{{tag}}/" />
+{% else %}
 <link rel="alternate" type="application/rss+xml" title="Latest Blog Posts RSS Feed" href="/feeds/blog/" />
+{% endif %}
 {% endblock %}
