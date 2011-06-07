@@ -35,11 +35,11 @@ class PostAdmin(admin.ModelAdmin):
         },),
     )
 
-    def queryset(self, request):
-        qset = self.model.objects.all()
-        if not request.user.is_superuser:
-            return qset.filter(posted_by=request.user)
-        return qset
+#    def queryset(self, request):
+#        qset = self.model.objects.all()
+#        if not request.user.is_superuser:
+#            return qset.filter(posted_by=request.user)
+#        return qset
 
     def save_model(self, request, obj, form, change):
         if not change:
