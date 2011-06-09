@@ -1,9 +1,9 @@
 #from django.views.generic.dates import ArchiveIndexView, DateDetailView
 from django.views.generic.date_based import archive_index, object_detail
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.db.models import Q
 from blog import models, forms
-from blog.models import Tag
+from blog.models import Tag, Category
 
 # This will roll for django-1.3
 #class PostMixin(object):
@@ -54,13 +54,25 @@ from blog.models import Tag
 #        context['comment_form'] = forms.CommentForm(self._get_remote_ip(self.request))
 #        return context
 #
-def post_list(request):
+
+def post_list(request, category_slug=None):
     date_field = 'post_date'
-    queryset = models.Post.objects.current()
-    for tag in request.GET.getlist('tags'):
-        queryset = queryset.filter(tags__name=tag)
+    context_vars = dict()
+    context_vars['page'] = 'blog'
+    if category_slug:
+        try:
+            category = Category.objects.get(slug=category_slug)
+            context_vars['category'] = category
+            context_vars['page'] = category.title
+            queryset = category.posts.current()
+        except Category.DoesNotExist:
+            raise Http404
+    else:
+        queryset = models.Post.objects.current()
     tags = Tag.objects.all()
-    return archive_index(request, queryset, date_field, extra_context=dict(page='blog', tags=tags))
+    context_vars['tags'] = tags
+
+    return archive_index(request, queryset, date_field, extra_context=context_vars)
 
 def post_details(request, year, month, day, slug):
     if request.user.is_authenticated():

@@ -1,4 +1,5 @@
 from django.db import models
+from django.template.defaultfilters import slugify
 
 from blog import settings
 from taggit.managers import TaggableManager
@@ -14,6 +15,27 @@ class Tag(TaggitTag):
     def get_absolute_url(self):
         return 'blog_post_tagged', (), dict(tag=self.name)
 
+class Category(models.Model):
+    title = models.CharField('title', max_length=200)
+    slug = models.SlugField('slug', unique=True)
+    
+    class Meta:
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
+
+    def __unicode__(self):
+        return self.title
+
+    @models.permalink
+    def get_absolute_url(self):
+        return 'blog_category', (), dict(category_slug=self.slug)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super(Category, self).save(*args, **kwargs)
+
+
 class BlogManager(models.Manager):
     def current(self):
         now = datetime.now()
@@ -28,6 +50,7 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField()
     content = models.TextField(blank=True)
+    category = models.ForeignKey(Category, verbose_name='category', related_name='posts')
 
     post_date = models.DateTimeField(default=datetime.now)
     kill_date = models.DateTimeField(null=True, blank=True, default=None)
@@ -43,6 +66,7 @@ class Post(models.Model):
 
     class Meta:
         ordering = ('-post_date',)
+
     def __unicode__(self):
         return self.title
 

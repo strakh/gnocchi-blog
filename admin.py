@@ -21,7 +21,7 @@ class PostAdmin(admin.ModelAdmin):
     form = forms.PostAdminForm
     fieldsets = (
         (None, {
-            'fields': ('title', 'slug',),
+            'fields': ('title', 'slug', 'category',),
         },),
         ('Content', {
             'classes': ('wide',),
@@ -57,3 +57,8 @@ class CommentAdmin(admin.ModelAdmin):
     search_fieklds = ('user_name', 'comment',)
 
 register(models.Comment, CommentAdmin)
+
+class CategoryAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("title",)}
+
+register(models.Category, CategoryAdmin)

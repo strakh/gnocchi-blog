@@ -1,7 +1,13 @@
 {% extends "blog/base.html" %}
 
 {% block contents %}
-<h2>Blog</h2>
+{% if category %}
+<h2>{% filter capfirst %}{{ category }}{% endfilter %}</h2>
+{% else %}{% if tag %}
+<h2>Tag: {% filter capfirst %}{{ tag }}{% endfilter %}</h2>
+{% else %}
+<h2>All blog posts</h2>
+{% endif %}{% endif %}
 
 {% for post in latest %}
   {% with 'True' as brief_content %}
